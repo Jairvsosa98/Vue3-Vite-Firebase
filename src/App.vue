@@ -1,4 +1,5 @@
 <script setup>
+import Spinner from './components/Spinner.vue';
 import {useUserStore} from './stores/user'
 
 const userStore = useUserStore()
@@ -17,7 +18,6 @@ const userStore = useUserStore()
 
     <router-view></router-view>
   </div>
-  <div v-else>
-    Loading User...
-  </div>
+  
+  <Spinner v-else />
 </template>
