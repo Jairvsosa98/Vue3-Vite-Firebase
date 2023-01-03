@@ -2,36 +2,26 @@
 import { useUserStore } from '../stores/user'
 import { useDatabaseStore } from '../stores/database'
 import Spinner from '../components/Spinner.vue';
-import { ref } from 'vue';
-import{useRouter} from 'vue-router'
+import { useRouter } from 'vue-router'
+import { message } from "ant-design-vue";
 
 const userStore = useUserStore()
 const databaseStore = useDatabaseStore()
-databaseStore.getUrls()
-
-const url = ref('')
 const router = useRouter()
 
-const validarURL = urlString => {
-    var urlPattern = new RegExp('^(https?:\\/\\/)?' + // validate protocol
-        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // validate domain name
-        '((\\d{1,3}\\.){3}\\d{1,3}))' + // validate OR ip (v4) address
-        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // validate port and path
-        '(\\?[;&a-z\\d%_.~+=-]*)?' + // validate query string
-        '(\\#[-a-z\\d_]*)?$', 'i'); // validate fragment locator
-    return !!urlPattern.test(urlString);
+databaseStore.getUrls()
+
+const confirm = async (id) => {
+    const res = await databaseStore.deleteUrl(id)
+    if(!res) return message.success('Se eliminó con éxito')
+    return message.error(res)
+    
+}
+const cancel = () => {
+    message.error('No se eliminó')
 }
 
-const handleSubmit = () => {
-    // validaciones de esa url...
-    if(validarURL(url.value)){
-        databaseStore.addUrl(url.value)
-        url.value = ''
-    }else {
-        console.log('Url inválida')
-    }
 
-}
 
 </script>
 
@@ -39,22 +29,24 @@ const handleSubmit = () => {
     <div>
         <h1>Home</h1>
         <p>{{ userStore.userData?.email }}</p>
-        <form @submit.prevent="handleSubmit">
-            <input type="text" placeholder="Ingrese URL" v-model="url">
-            <button type="submit">Agregar</button>
-        </form>
+        <add-form></add-form>
         <Spinner v-if="databaseStore.loadingDoc"></Spinner>
-        <ul v-else>
-            <li v-for="item of databaseStore.documents" :key="item.id">
-                {{ item.id }}
-                <br />
-                {{ item.name }}
-                <br />
-                {{ item.short }}
-                <br />
-                <button @click="databaseStore.deleteUrl(item.id)">Eliminar</button>
-                <button @click="router.push(`/editar/${item.id}`)">Editar</button>
-            </li>
-        </ul>
+        <a-space v-if="!databaseStore.loadingDoc" direction="vertical" style="width: 100%">
+            <a-card v-for="item of databaseStore.documents" :key="item.id" :title="item.short">
+                <template #extra>
+                    <a-space>
+                        <a-popconfirm title="¿Estás seguro que deseas eliminar el enlace?" ok-text="Sí" cancel-text="No"
+                            @confirm="confirm(item.id)" @cancel="cancel">
+                            <a-button danger :loading="databaseStore.loading" :disabled="databaseStore.loading">Eliminar</a-button>
+                        </a-popconfirm>
+
+                        <a-button type="primary" @click="router.push(`/editar/${item.id}`)">Editar</a-button>
+                    </a-space>
+
+                </template>
+                <p>{{ item.name }}</p>
+            </a-card>
+        </a-space>
+
     </div>
 </template>

@@ -19,9 +19,8 @@ const requireAuth = async (to, from, next) => {
 
 const routes = [
     { path: '/login', name: 'login', component: Login },
-    { path: '/register', name: 'register', component: Register },
-    
-    { path: '/', name: '/', component: Home, beforeEnter: requireAuth },
+    { path: '/register', name: 'register', component: Register }, 
+    { path: '/', name: 'home', component: Home, beforeEnter: requireAuth },
     { path: '/editar/:id', name: 'editar', component: Editar, beforeEnter: requireAuth },
 
 ]
