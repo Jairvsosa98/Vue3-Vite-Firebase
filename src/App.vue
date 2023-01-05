@@ -22,6 +22,9 @@ watch(() => route.name, () => selectedKeys.value = [route.name])
         <a-menu-item key="home" v-if="userStore.userData">
           <router-link to="/">Home</router-link>
         </a-menu-item>
+        <a-menu-item key="perfil" v-if="userStore.userData">
+          <router-link to="/perfil">Perfil</router-link>
+        </a-menu-item>
         <a-menu-item key="login" v-if="!userStore.userData">
           <router-link to="/login">Login</router-link>
         </a-menu-item>
