@@ -21,7 +21,7 @@ const cancel = () => {
     message.error('No se eliminó')
 }
 
-const copiarPortapapeles = async(id) => {
+const copiarPortapapeles = async (id) => {
     console.log(id)
     if (!navigator.clipboard) {
         return message.error('No se pudo copiar al portapapeles.')
@@ -30,9 +30,9 @@ const copiarPortapapeles = async(id) => {
 
     console.log(path)
     const res = await navigator.clipboard.writeText(path)
-    if(res){
+    if (res) {
         message.error('No se pudo copiar al portapapeles.')
-    }else{
+    } else {
         message.success('Se copió con éxito')
     }
 
@@ -54,12 +54,22 @@ const copiarPortapapeles = async(id) => {
                     <a-space>
                         <a-popconfirm title="¿Estás seguro que deseas eliminar el enlace?" ok-text="Sí" cancel-text="No"
                             @confirm="confirm(item.id)" @cancel="cancel">
-                            <a-button danger :loading="databaseStore.loading"
-                                :disabled="databaseStore.loading">Eliminar</a-button>
+                            <a-tooltip color="red">
+                                <template #title>Eliminar</template>
+                                <a-button danger :loading="databaseStore.loading" :disabled="databaseStore.loading"><i
+                                        class="fa-solid fa-trash"></i></a-button>
+                            </a-tooltip>
                         </a-popconfirm>
 
-                        <a-button type="primary" @click="router.push(`/editar/${item.id}`)">Editar</a-button>
-                        <a-button @click="copiarPortapapeles(item.id)">Copiar URL</a-button>
+                        <a-tooltip color="geekblue">
+                            <template #title>Editar</template>
+                            <a-button type="primary" @click="router.push(`/editar/${item.id}`)"><i
+                                    class="fa-solid fa-pen-to-square"></i></a-button>
+                        </a-tooltip>
+                        <a-tooltip>
+                            <template #title>Copiar URL</template>
+                            <a-button @click="copiarPortapapeles(item.id)"><i class="fa-solid fa-copy"></i></a-button>
+                        </a-tooltip>
                     </a-space>
 
                 </template>
