@@ -40,7 +40,7 @@ watch(() => route.name, () => selectedKeys.value = [route.name])
     <a-layout-content style="padding: 0 50px">
       <div :style="{ background: '#fff', padding: '24px', minHeight: '280px' }">
         <Spinner v-if="userStore.loadingSession" />
-        <router-view></router-view>
+        <router-view v-else></router-view>
       </div>
 
     </a-layout-content>

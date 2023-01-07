@@ -7,14 +7,7 @@ const userStore = useUserStore()
 const fileList = ref([])
 
 const onFinish = async () => {
-    const res = await userStore.updateUser(userStore.userData.displayName)
-
-    if (fileList.value[0]) {
-        const res = await userStore.updateImage(fileList.value[0])
-        if (res) {
-            return message.error('Hubo un error al subir la imágen')
-        }
-    }
+    const res = await userStore.updateUser(userStore.userData.displayName,fileList.value[0])
 
     if (!res) {
         return message.success('Se actualizó tu información de perfil')
@@ -50,6 +43,7 @@ const handleChange = info => {
         }
 
     }
+
     // Si el user sube otra, se reemplazará
     let resFileList = [...info.fileList];
     // Valida que sea solo una imagen
@@ -68,14 +62,14 @@ const handleChange = info => {
     <div>
         <h1>Perfil de usuario</h1>
         <div class="text-center mb-5 ">
-            <a-avatar class="shadow-gray o-fit" :size="{ xs: 50, sm: 80, md: 100, lg: 150, xl: 180 }"
+            <a-avatar class="shadow-gray o-fit" :size="{ xs: 50, sm: 80, md: 100, lg: 150, xl: 180, xxl: 180 }"
                 :src="userStore.userData.photoURL" />
         </div>
         <a-row>
             <a-col :xs="{ span: 24 }" :sm="{ span: 12, offset: 6 }">
                 <a-form layout="vertical" name="basicPerfil" autocomplete="off" :model="userStore.userData"
                     @finish="onFinish">
-                    <a-form-item label="Tu Correo (no modfiicable)" name="email"
+                    <a-form-item label="Tu Correo (no modificable)" name="email"
                         :rules="{ required: true, whitespace: true, type: 'email', message: 'Ingresa tu email válido' }">
                         <a-input disabled type="email" placeholder="Ingrese Email"
                             v-model:value="userStore.userData.email"></a-input>
