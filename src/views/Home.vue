@@ -13,12 +13,29 @@ databaseStore.getUrls()
 
 const confirm = async (id) => {
     const res = await databaseStore.deleteUrl(id)
-    if(!res) return message.success('Se eliminó con éxito')
+    if (!res) return message.success('Se eliminó con éxito')
     return message.error(res)
-    
+
 }
 const cancel = () => {
     message.error('No se eliminó')
+}
+
+const copiarPortapapeles = async(id) => {
+    console.log(id)
+    if (!navigator.clipboard) {
+        return message.error('No se pudo copiar al portapapeles.')
+    }
+    const path = `${window.location.origin}/${id}`
+
+    console.log(path)
+    const res = await navigator.clipboard.writeText(path)
+    if(res){
+        message.error('No se pudo copiar al portapapeles.')
+    }else{
+        message.success('Se copió con éxito')
+    }
+
 }
 
 
@@ -37,10 +54,12 @@ const cancel = () => {
                     <a-space>
                         <a-popconfirm title="¿Estás seguro que deseas eliminar el enlace?" ok-text="Sí" cancel-text="No"
                             @confirm="confirm(item.id)" @cancel="cancel">
-                            <a-button danger :loading="databaseStore.loading" :disabled="databaseStore.loading">Eliminar</a-button>
+                            <a-button danger :loading="databaseStore.loading"
+                                :disabled="databaseStore.loading">Eliminar</a-button>
                         </a-popconfirm>
 
                         <a-button type="primary" @click="router.push(`/editar/${item.id}`)">Editar</a-button>
+                        <a-button @click="copiarPortapapeles(item.id)">Copiar URL</a-button>
                     </a-space>
 
                 </template>
