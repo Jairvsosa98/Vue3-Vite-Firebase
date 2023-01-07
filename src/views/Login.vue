@@ -7,8 +7,8 @@ import "ant-design-vue/es/message/style/css";
 const userStore = useUserStore();
 
 const formState = reactive({
-    password: "1234567",
-    email: "jairvs@gmail.com",
+    password: "",
+    email: "",
 });
 
 const onFinish = async (values) => {
